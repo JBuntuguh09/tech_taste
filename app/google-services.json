@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "690186998407",
+    "firebase_url": "https://techtaste-1873b.firebaseio.com",
+    "project_id": "techtaste-1873b",
+    "storage_bucket": "techtaste-1873b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690186998407:android:d5b346d2fd3e49b5",
+        "android_client_info": {
+          "package_name": "com.lonewolf.techtaste"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690186998407-jj6vbpvqeeklb54e3buobo8iir38shji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lonewolf.techtaste",
+            "certificate_hash": "1a990126a278c7a05ec6de2c074ec25edb3f6ffa"
+          }
+        },
+        {
+          "client_id": "690186998407-07dah9iuile5rn99k5odtbthjeatpodf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEpQZiWGEjH5zKeAmCIgTgmkrOdXelHjA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "690186998407-07dah9iuile5rn99k5odtbthjeatpodf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

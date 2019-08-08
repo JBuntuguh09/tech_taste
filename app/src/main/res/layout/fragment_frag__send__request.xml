@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.Frag_Send_Request">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_margin="15dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Spinner
+                android:background="@drawable/button_main"
+                android:id="@+id/spinServices"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </Spinner>
+
+
+
+            <android.support.design.widget.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_marginTop="30dp"
+                android:id="@+id/txtInputComment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.design.widget.TextInputEditText
+                    android:background="@drawable/edittext_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:maxLength="50"
+                    android:id="@+id/edtTitle"
+                    android:hint="@string/title_50_characters_or_less_only" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.design.widget.TextInputEditText
+                    android:background="@drawable/edittext_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edtComment"
+                    android:singleLine="true"
+                    android:hint="@string/describe_what_you_want_in_detail" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/txtPicsLabel"/>
+            <Button
+                android:id="@+id/btnAddPic"
+                android:background="@drawable/button_main"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:text="Add pictures"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/button_main"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:id="@+id/btnSubmit"
+                android:text="@string/submit"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="181dp"
+        android:layout_marginLeft="181dp"
+        android:layout_marginTop="233dp"
+        android:layout_marginEnd="182dp"
+        android:layout_marginRight="182dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

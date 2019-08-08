@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/tabSettings"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_weight="9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="View Photos"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/txtCloseTab"
+                android:tint="@color/white"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/close" />
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:id="@+id/linImages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"></LinearLayout>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tstCamera"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:drawableRight="@drawable/camera"
+        android:text="Take Photo"
+
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/txtGallery"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="Choose from Gallery"
+        android:drawableRight="@drawable/gallery"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/txtCancel"
+        android:background="@drawable/edittext_style"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="Cancel"
+        android:drawableRight="@drawable/close"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

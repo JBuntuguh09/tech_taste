@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menuAdminDash"
+        android:title="Admin Dashboard"/>
+    <item android:id="@+id/menuSettings"
+        android:visible="false"
+        android:title="Settings"/>
+    <item android:id="@+id/menuLogOut"
+        android:title="Log Out"/>
+</menu>
