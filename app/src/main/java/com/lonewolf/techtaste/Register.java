@@ -2,19 +2,30 @@ package com.lonewolf.techtaste;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,6 +33,7 @@ import com.lonewolf.techtaste.Resources.Settings;
 import com.lonewolf.techtaste.Resources.ShortCut_To;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class Register extends AppCompatActivity {
 
@@ -29,8 +41,13 @@ public class Register extends AppCompatActivity {
     private Button register;
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar, progress;
     private Settings settings;
+    private String userId, mVerificationId;
+    private AlertDialog.Builder alert;
+    private AlertDialog dialog;
+    private LinearLayout linearLayout;
+    private String number ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +67,7 @@ public class Register extends AppCompatActivity {
         confirm = findViewById(R.id.edtConfirm);
         register = findViewById(R.id.btnSubmit);
         progressBar = findViewById(R.id.progressBar);
+        linearLayout = findViewById(R.id.linRegister);
 
 
 
@@ -84,7 +102,7 @@ public class Register extends AppCompatActivity {
                 }else if(pword.getText().toString().length()<8){
                     Toast.makeText(Register.this, "Password should be 8 characters or more", Toast.LENGTH_SHORT).show();
                     pword.setError("Password should be 8 characters or more");
-                }else if(pword.getText().toString().equals(confirm.getText().toString())){
+                }else if(!pword.getText().toString().equals(confirm.getText().toString())){
                     Toast.makeText(Register.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                     confirm.setError("Passwords do not match");
                 }else{
@@ -97,7 +115,8 @@ public class Register extends AppCompatActivity {
                     confirm.setEnabled(false);
                     register.setEnabled(false);
 
-                    registerMe();
+                    showPhomeVerify();
+                    //registerMe();
                 }
                 ShortCut_To.hideKeyboard(Register.this);
             }
@@ -109,7 +128,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onSuccess(AuthResult authResult) {
                 String userId = auth.getCurrentUser().getUid();
-
+                number = phone.getText().toString();
 //                UserProfileChangeRequest updateUser = new UserProfileChangeRequest.Builder()
 //                        .setDisplayName(fname.getText().toString()+" "+lname.getText().toString())
 //                        .build();
@@ -120,7 +139,7 @@ public class Register extends AppCompatActivity {
                 hashMap.put("Last_Name", lname.getText().toString());
                 hashMap.put("Email", email.getText().toString());
                 hashMap.put("Password", pword.getText().toString());
-                hashMap.put("Phone", phone.getText().toString());
+                hashMap.put("Phone", number);
                 hashMap.put("Created_Date", ShortCut_To.getCurrentDateFormat2());
 
 
@@ -172,4 +191,145 @@ public class Register extends AppCompatActivity {
             }
         });
     }
+
+    private  void showPhomeVerify(){
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View view = layoutInflater.inflate(R.layout.layout_phone_auth, linearLayout, false);
+        final EditText verifyEdt = view.findViewById(R.id.edtVerify);
+        ImageView close = view.findViewById(R.id.imgCloseTab);
+        final Button submit = view.findViewById(R.id.btnVerify);
+        progress = view.findViewById(R.id.progressBar2);
+
+        verifyEdt.setText(phone.getText().toString());
+        alert = new AlertDialog.Builder(this);
+
+        dialog = alert.create();
+        dialog.setView(view);
+        dialog.show();
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(submit.getText().toString().toLowerCase().equals("verify")){
+                    if(verifyEdt.getText().toString().isEmpty()) {
+                        Toast.makeText(Register.this, "Enter a number", Toast.LENGTH_SHORT).show();
+                    }else {
+                        verifyPhoneNumber(verifyEdt, submit);
+                    }
+                }else if(submit.getText().toString().toLowerCase().equals("submit")){
+                    sendCode(verifyEdt);
+                }
+            }
+        });
+    }
+
+    private void verifyPhoneNumber(final EditText verifyPhone, final Button send) {
+        progress.setVisibility(View.VISIBLE);
+        PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential credential) {
+                progress.setVisibility(View.GONE);
+                verifyPhone.setText("");
+                verifyPhone.setHint("Enter verification code here");
+                send.setText("Submit");
+
+                Toast.makeText(Register.this, "Successfully sent code code. Please wait a few seconds and check your phone for your verificstion code", Toast.LENGTH_SHORT).show();
+            }
+
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                progress.setVisibility(View.GONE);
+                Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    // Invalid request
+                    // ...
+                } else if (e instanceof FirebaseTooManyRequestsException) {
+                    // The SMS quota for the project has been exceeded
+                    // ...
+                }
+
+                // Show a message and update the UI
+                // ...
+            }
+
+            @Override
+            public void onCodeSent(String verificationId,
+                                   PhoneAuthProvider.ForceResendingToken token) {
+
+                mVerificationId = verificationId;
+                //mResendToken = token;
+                progress.setVisibility(View.GONE);
+
+
+                Toast.makeText(Register.this, "Successfully sent code code. Please wait a few seconds and check your phone for your verificstion code", Toast.LENGTH_LONG).show();
+
+
+                // ...
+            }
+        };
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                verifyPhone.getText().toString(),
+                60,
+                TimeUnit.SECONDS,   // Unit of timeout
+                this,               // Activity (for callback binding)
+                mCallbacks);        // OnVerificationStateChangedCallbacks
+
+
+
+
+    }
+
+
+    private void sendCode(final EditText verifyPhone) {
+        progress.setVisibility(View.VISIBLE);
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, verifyPhone.getText().toString());
+        signInWithPhoneAuthCredential(credential);
+    }
+
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
+
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+
+                            //progress.setVisibility(View.GONE);
+
+
+                            Toast.makeText(Register.this, "Successfully verified. Logging in.........", Toast.LENGTH_LONG).show();
+                            //registerUser();
+                            registerMe();
+
+
+
+                            // ...
+                        } else {
+
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                // The verification code entered was invalid
+                                progress.setVisibility(View.GONE);
+                                Toast.makeText(Register.this, "Not Verfied", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                });
+    }
+
+
+
 }
