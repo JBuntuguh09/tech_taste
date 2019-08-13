@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/menuAdminDash"
-        android:title="Admin Dashboard"/>
-    <item android:id="@+id/menuSettings"
-        android:visible="false"
-        android:title="Settings"/>
+        android:title="Admin Dashboard"
+        />
+    <item android:id="@+id/menuAbout"
+        android:title="About Teck Taste"/>
     <item android:id="@+id/menuLogOut"
         android:title="Log Out"/>
 </menu>

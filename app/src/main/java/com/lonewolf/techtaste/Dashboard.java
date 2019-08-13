@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.lonewolf.techtaste.Dialogues.Show_Me;
 import com.lonewolf.techtaste.Resources.Sections_Page_Adapter;
 
 public class Dashboard extends AppCompatActivity {
@@ -19,6 +21,7 @@ public class Dashboard extends AppCompatActivity {
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private FirebaseAuth auth;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,7 @@ public class Dashboard extends AppCompatActivity {
         viewPager = findViewById(R.id.vpDashBoardMain);
         tabLayout = findViewById(R.id.tabDashboard);
         toolbar = findViewById(R.id.toolbarDashBoard);
+        linearLayout = findViewById(R.id.linDash);
 
         auth = FirebaseAuth.getInstance();
         setSupportActionBar(toolbar);
@@ -42,6 +46,8 @@ public class Dashboard extends AppCompatActivity {
 
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_dashboard, menu);
@@ -52,13 +58,25 @@ public class Dashboard extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.menuAdminDash){
 
-        }else if(item.getItemId()==R.id.menuSettings){
-
+        }else if(item.getItemId()==R.id.menuAbout){
+            Show_Me.help(Dashboard.this, linearLayout);
         }else if(item.getItemId()==R.id.menuLogOut){
             auth.signOut();
 
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    @Override
+    public void onBackPressed() {
+        auth.signOut();
+        super.onBackPressed();
     }
 }

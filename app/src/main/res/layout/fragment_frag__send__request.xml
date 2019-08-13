@@ -20,6 +20,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_marginTop="10dp"
+                android:textSize="17sp"
+                android:id="@+id/txtWelcomeMessage"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             <Spinner
                 android:background="@drawable/button_main"
                 android:id="@+id/spinServices"
@@ -59,7 +66,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/edtComment"
-                    android:singleLine="true"
                     android:hint="@string/describe_what_you_want_in_detail" />
             </android.support.design.widget.TextInputLayout>
 
@@ -69,11 +75,14 @@
                 android:layout_height="match_parent"
                 android:id="@+id/txtPicsLabel"/>
             <Button
+                android:drawablePadding="20dp"
+                android:drawableTint="@color/white"
                 android:id="@+id/btnAddPic"
                 android:background="@drawable/button_main"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:text="Add pictures"
+                android:drawableRight="@drawable/camera"
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

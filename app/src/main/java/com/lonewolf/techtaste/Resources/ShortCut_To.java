@@ -1,6 +1,9 @@
 package com.lonewolf.techtaste.Resources;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -39,5 +42,20 @@ public class ShortCut_To {
     }
 
     public static String[] getServices = {"Select Service", "Android App", "Web App","Mobile App", "Website Development", "Web App", "Technical Support"};
+
+    public static Bitmap decodeBase64(String input) {
+
+        try {
+            byte[] decodedByte = Base64.decode(input, 0);
+            return BitmapFactory.decodeByteArray(decodedByte, 0,
+                    decodedByte.length);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
 
 }

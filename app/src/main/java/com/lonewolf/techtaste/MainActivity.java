@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.lonewolf.techtaste.Dialogues.Show_Me;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText email, pword;
     private FirebaseAuth auth;
     private ProgressBar progressBar;
+    private LinearLayout linearLayout;
 
 
     @Override
@@ -37,12 +40,15 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.edtEmail);
         pword = findViewById(R.id.edtPassword);
         progressBar = findViewById(R.id.progressBar);
+        linearLayout =findViewById(R.id.linLogin);
 
 
+        
         if(auth.getUid()!=null){
             Intent intent = new Intent(MainActivity.this, Dashboard.class);
             startActivity(intent);
         }
+
         getButtons();
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -101,4 +107,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

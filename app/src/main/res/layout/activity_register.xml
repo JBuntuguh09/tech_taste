@@ -109,6 +109,7 @@
 
 
             <Button
+                android:layout_marginBottom="20dp"
                 android:id="@+id/btnSubmit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
