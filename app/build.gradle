@@ -5,6 +5,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "29.0.1"
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "com.lonewolf.techtaste"
         minSdkVersion 15
         targetSdkVersion 28

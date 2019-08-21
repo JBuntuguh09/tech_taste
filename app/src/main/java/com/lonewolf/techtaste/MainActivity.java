@@ -2,8 +2,11 @@ package com.lonewolf.techtaste;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
+    private TextInputLayout u1,p1;
 
 
     @Override
@@ -41,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         pword = findViewById(R.id.edtPassword);
         progressBar = findViewById(R.id.progressBar);
         linearLayout =findViewById(R.id.linLogin);
+        p1 = findViewById(R.id.txtInputPassword);
 
 
         
@@ -79,6 +84,27 @@ public class MainActivity extends AppCompatActivity {
                     login.setEnabled(false);
 
                     logMeIn();
+                }
+            }
+        });
+
+        pword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length()>0){
+                    p1.setPasswordVisibilityToggleEnabled(true);
+                }else{
+                    p1.setPasswordVisibilityToggleEnabled(false);
                 }
             }
         });

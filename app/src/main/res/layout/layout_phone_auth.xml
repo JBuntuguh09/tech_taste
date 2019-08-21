@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.Toolbar
         android:id="@+id/tabSettings"
         android:layout_width="match_parent"
 
@@ -45,25 +44,21 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:id="@+id/textInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabSettings">
 
-        <android.support.design.widget.TextInputEditText
+
+        <EditText
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tabSettings"
             android:id="@+id/edtVerify"
             android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Phone Number(eg+233548255903)" />
-    </android.support.design.widget.TextInputLayout>
+
 
     <Button
         android:textColor="@color/white"
@@ -77,10 +72,10 @@
         android:layout_marginTop="48dp"
         android:layout_marginEnd="162dp"
         android:layout_marginRight="162dp"
-        android:text="Verify"
+        android:text="@string/verify"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/edtVerify" />
 
     <ProgressBar
         android:visibility="gone"
@@ -95,7 +90,7 @@
         android:layout_marginRight="162dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/edtVerify" />
 
 
 </android.support.constraint.ConstraintLayout>

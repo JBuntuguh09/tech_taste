@@ -4,7 +4,10 @@ package com.lonewolf.techtaste.Fragments;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +61,7 @@ public class Frag_Settings extends Fragment {
     private String userId, mVerificationId;
     private AlertDialog.Builder alert;
     private AlertDialog dialog;
+    private TextInputLayout t1,t2,t3;
 
 
     public Frag_Settings() {
@@ -263,6 +267,10 @@ public class Frag_Settings extends Fragment {
         final EditText pass1 = view.findViewById(R.id.edtOldPass);
         final EditText pass2 = view.findViewById(R.id.edtNewPass);
         final EditText pass3 = view.findViewById(R.id.edtConfirmPass);
+        t1 = view.findViewById(R.id.txtInput1);
+        t2 = view.findViewById(R.id.txtInput2);
+        t3 = view.findViewById(R.id.txtInput3);
+
         progressBarPass = view.findViewById(R.id.progressBar);
         updatePass = view.findViewById(R.id.btnChange);
         final ImageView close = view.findViewById(R.id.imgCloseTab);
@@ -292,6 +300,69 @@ public class Frag_Settings extends Fragment {
                 }else{
 
                     updateProfile("Password", pass2.getText().toString(), dialog);
+                }
+            }
+        });
+
+        pass1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length()>0){
+                    t1.setPasswordVisibilityToggleEnabled(true);
+                }else {
+                    t1.setPasswordVisibilityToggleEnabled(false);
+                }
+            }
+        });
+
+        pass2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length()>0){
+                    t2.setPasswordVisibilityToggleEnabled(true);
+                }else {
+                    t2.setPasswordVisibilityToggleEnabled(false);
+                }
+            }
+        });
+
+        pass3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length()>0){
+                    t3.setPasswordVisibilityToggleEnabled(true);
+                }else {
+                    t3.setPasswordVisibilityToggleEnabled(false);
                 }
             }
         });

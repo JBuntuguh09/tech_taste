@@ -333,6 +333,10 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
                 settings.setFullName(dataSnapshot.child("First_Name").getValue().toString()+" "+dataSnapshot.child("Last_Name").getValue().toString());
                 settings.setEmailAddress(dataSnapshot.child("Email").getValue().toString());
 
+                if(dataSnapshot.child("Role").exists()){
+                    settings.setUserrole(dataSnapshot.child("Role").getValue().toString());
+                }
+
                 String newWelcome = "Welcome "+settings.getFullName();
                 welcom.setText(newWelcome);
 

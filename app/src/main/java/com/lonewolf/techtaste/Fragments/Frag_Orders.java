@@ -56,66 +56,80 @@ public class Frag_Orders extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
 
         getOrders();
+
+
         return view;
     }
 
     private void getOrders() {
         progressBar.setVisibility(View.VISIBLE);
-        databaseReference.child("Request").child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                arrayList.clear();
-                linearLayout.removeAllViews();
-                for(DataSnapshot grand : dataSnapshot.getChildren()){
-                    for(DataSnapshot father : grand.getChildren()){
+        try {
 
-                        HashMap<String, String> hashMap = new HashMap<>();
-                        hashMap.put("title", father.child("Title").getValue().toString());
-                        hashMap.put("comment", father.child("Comment").getValue().toString());
-                        hashMap.put("service", father.child("Service").getValue().toString());
-                        hashMap.put("date", father.child("Created_Date").getValue().toString());
-                        hashMap.put("status", father.child("Status").getValue().toString());
-                        hashMap.put("serviceId", father.getKey().toString());
-                        Log.d("ggg", hashMap.get("serviceId"));
+            databaseReference.child("Request").child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
 
-                        if(father.child("Comment_Extra").exists()){
-                            hashMap.put("comment_extra", father.child("Comment_Extra").getValue().toString());
-                        }else{
-                            hashMap.put("comment_extra", "Empty");
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    arrayList.clear();
+                    linearLayout.removeAllViews();
+                    for(DataSnapshot grand : dataSnapshot.getChildren()){
+                        for(DataSnapshot father : grand.getChildren()){
+
+                            HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("title", father.child("Title").getValue().toString());
+                            hashMap.put("comment", father.child("Comment").getValue().toString());
+                            hashMap.put("service", father.child("Service").getValue().toString());
+                            hashMap.put("date", father.child("Created_Date").getValue().toString());
+                            hashMap.put("status", father.child("Status").getValue().toString());
+                            hashMap.put("serviceId", father.getKey().toString());
+
+
+                            if(father.child("Comment_Extra").exists()){
+                                hashMap.put("comment_extra", father.child("Comment_Extra").getValue().toString());
+                            }else{
+                                hashMap.put("comment_extra", "Empty");
+                            }
+
+                            if(father.child("Solution").exists()){
+                                hashMap.put("solution", father.child("Solution").getValue().toString());
+                            }else{
+                                hashMap.put("solution", "Empty");
+                            }
+
+                            if(father.child("Solution_Extra").exists()){
+                                hashMap.put("solution_extra", father.child("Solution_Extra").getValue().toString());
+                            }else{
+                                hashMap.put("solution_extra", "Empty");
+                            }
+
+
+                            arrayList.add(hashMap);
+
                         }
-
-                        if(father.child("Solution").exists()){
-                            hashMap.put("solution", father.child("Solution").getValue().toString());
-                        }else{
-                            hashMap.put("solution", "Empty");
+                    }
+                    if(arrayList.size()>0 && getActivity()!=null){
+                        setOrders();
+                    }else{
+                        if(getActivity()!=null) {
+                            Toast.makeText(getActivity(), "No Records found", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
-
-                        if(father.child("Solution_Extra").exists()){
-                            hashMap.put("solution_extra", father.child("Solution_Extra").getValue().toString());
-                        }else{
-                            hashMap.put("solution_extra", "Empty");
-                        }
-
-
-                        arrayList.add(hashMap);
-
                     }
                 }
-                if(arrayList.size()>0 && getActivity()!=null){
-                    setOrders();
-                }else{
-                    Toast.makeText(getActivity(), "No Records found", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    progressBar.setVisibility(View.GONE);
+                    if(getActivity()!=null) {
+                        Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void setOrders() {

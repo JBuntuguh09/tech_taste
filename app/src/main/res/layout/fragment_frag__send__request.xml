@@ -82,20 +82,21 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:text="Add pictures"
-                android:drawableRight="@drawable/camera"
+                android:drawableRight="@drawable/baseline_camera_alt_white_24"
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <Button
+                android:id="@+id/btnSubmit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
                 android:background="@drawable/button_main"
+                android:text="@string/submit"
                 android:textColor="@color/white"
-                android:textStyle="bold"
-                android:id="@+id/btnSubmit"
-                android:text="@string/submit"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>

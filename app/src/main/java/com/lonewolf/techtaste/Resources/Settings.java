@@ -12,6 +12,7 @@ public class Settings {
     private final static String FULL_NAME = "user full name";
     private final static String PHONE_NUM = "my phone num";
     private final static String EMAIL_ADDRESS = "my email add";
+    private final static String USERROLE = "user rolz";
 
 
     public Settings(Context context) {
@@ -67,6 +68,16 @@ public class Settings {
     public void setEmailAddress(String emailAddress){
         Editor editor = getEditor();
         editor.putString(EMAIL_ADDRESS, emailAddress);
+        editor.commit();
+    }
+
+    public String getUserrole(){
+        return sharedPreferences.getString(USERROLE, "");
+    }
+
+    public void setUserrole(String userrole){
+        Editor editor = getEditor();
+        editor.putString(USERROLE,userrole );
         editor.commit();
     }
 }

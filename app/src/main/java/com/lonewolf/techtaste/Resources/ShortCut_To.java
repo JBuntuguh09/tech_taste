@@ -41,7 +41,7 @@ public class ShortCut_To {
         return dateFormat.format(date);
     }
 
-    public static String[] getServices = {"Select Service", "Android App", "Web App","Mobile App", "Website Development", "Web App", "Technical Support"};
+    public static String[] getServices = {"Select Service",  "Technical Support", "Android App", "Web App","Mobile App", "Website Development", "Web App"};
 
     public static Bitmap decodeBase64(String input) {
 

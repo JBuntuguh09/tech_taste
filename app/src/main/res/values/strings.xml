@@ -22,4 +22,6 @@
     <string name="request">Request</string>
     <string name="my_orders">My Orders</string>
     <string name="post_order">Post Order</string>
+    <string name="verify">Verify</string>
+    <string name="username">Username</string>
 </resources>

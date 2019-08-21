@@ -120,7 +120,7 @@ public class Splash extends AppCompatActivity {
         image.startAnimation(animateBounce);
 
         ObjectAnimator progressAnimator = ObjectAnimator.ofInt(progressBar, "progress", 0, 100);
-        progressAnimator.setDuration(8000);
+        progressAnimator.setDuration(4000);
         progressAnimator.setInterpolator(new LinearInterpolator());
         progressAnimator.start();
         mSplashThread.start();

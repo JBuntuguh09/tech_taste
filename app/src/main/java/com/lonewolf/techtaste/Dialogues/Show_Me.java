@@ -67,15 +67,7 @@ public class Show_Me {
         final TextView viewPics = view.findViewById(R.id.txtViewPics);
         final TextView viewSolutionPics = view.findViewById(R.id.txtViewSolutionPics);
 
-//        final ImageView img1 = view.findViewById(R.id.img1);
-//        final ImageView img2 = view.findViewById(R.id.img2);
-//        final ImageView img3 = view.findViewById(R.id.img3);
-//        final ImageView img4 = view.findViewById(R.id.img4);
 
-//        img1.setVisibility(View.GONE);
-//        img2.setVisibility(View.GONE);
-//        img3.setVisibility(View.GONE);
-//        img4.setVisibility(View.GONE);
 
         String vService = list.get(0);
         String vTitle = list.get(1);

@@ -1,10 +1,14 @@
 package com.lonewolf.techtaste;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,8 +41,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Register extends AppCompatActivity {
 
-    private EditText fname, lname, phone, email, pword, confirm;
-    private Button register;
+    private EditText fname, lname, phone, email, pword, confirm, verifyEdt;
+    private Button register, submit;
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
     private ProgressBar progressBar, progress;
@@ -48,6 +52,7 @@ public class Register extends AppCompatActivity {
     private AlertDialog dialog;
     private LinearLayout linearLayout;
     private String number ="";
+    private TextInputLayout p1, p2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +74,12 @@ public class Register extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         linearLayout = findViewById(R.id.linRegister);
 
-
+        p1 = findViewById(R.id.textInputLayoutPass);
+        p2 = findViewById(R.id.textInputLayoutConfirm);
 
         getButtons();
+
+
 
 
     }
@@ -80,7 +88,7 @@ public class Register extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ShortCut_To.hideKeyboard(Register.this);
                 if(fname.getText().toString().isEmpty()){
                     Toast.makeText(Register.this, "Enter your First Name", Toast.LENGTH_SHORT).show();
                     fname.setError("Enter your First Name");
@@ -121,6 +129,49 @@ public class Register extends AppCompatActivity {
                 ShortCut_To.hideKeyboard(Register.this);
             }
         });
+
+        pword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length()>0){
+                    p1.setPasswordVisibilityToggleEnabled(true);
+                }else {
+                    p1.setPasswordVisibilityToggleEnabled(false);
+                }
+            }
+        });
+
+
+        confirm.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length()>0){
+                    p2.setPasswordVisibilityToggleEnabled(true);
+                }else {
+                    p2.setPasswordVisibilityToggleEnabled(false);
+                }
+            }
+        });
     }
 
     private void registerMe() {
@@ -155,6 +206,8 @@ public class Register extends AppCompatActivity {
                         confirm.setEnabled(true);
                         register.setEnabled(true);
                         settings.setPhoneNum(phone.getText().toString());
+                        verifyEdt.setEnabled(true);
+                        submit.setEnabled(true);
                         Toast.makeText(Register.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Register.this, Dashboard.class);
                         startActivity(intent);
@@ -171,6 +224,8 @@ public class Register extends AppCompatActivity {
                         phone.setEnabled(true);
                         confirm.setEnabled(true);
                         register.setEnabled(true);
+                        verifyEdt.setEnabled(true);
+                        submit.setEnabled(true);
                         Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -187,6 +242,9 @@ public class Register extends AppCompatActivity {
                 phone.setEnabled(true);
                 confirm.setEnabled(true);
                 register.setEnabled(true);
+                verifyEdt.setEnabled(true);
+                submit.setEnabled(true);
+                progress.setVisibility(View.GONE);
                 Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -195,9 +253,9 @@ public class Register extends AppCompatActivity {
     private  void showPhomeVerify(){
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View view = layoutInflater.inflate(R.layout.layout_phone_auth, linearLayout, false);
-        final EditText verifyEdt = view.findViewById(R.id.edtVerify);
+        verifyEdt = view.findViewById(R.id.edtVerify);
         ImageView close = view.findViewById(R.id.imgCloseTab);
-        final Button submit = view.findViewById(R.id.btnVerify);
+        submit = view.findViewById(R.id.btnVerify);
         progress = view.findViewById(R.id.progressBar2);
 
         verifyEdt.setText(phone.getText().toString());
@@ -205,6 +263,8 @@ public class Register extends AppCompatActivity {
 
         dialog = alert.create();
         dialog.setView(view);
+        dialog.setCanceledOnTouchOutside(false);
+
         dialog.show();
 
         close.setOnClickListener(new View.OnClickListener() {
@@ -217,29 +277,50 @@ public class Register extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ShortCut_To.hideKeyboard(Register.this);
                 if(submit.getText().toString().toLowerCase().equals("verify")){
                     if(verifyEdt.getText().toString().isEmpty()) {
                         Toast.makeText(Register.this, "Enter a number", Toast.LENGTH_SHORT).show();
                     }else {
-                        verifyPhoneNumber(verifyEdt, submit);
+                        verifyPhoneNumber();
                     }
                 }else if(submit.getText().toString().toLowerCase().equals("submit")){
-                    sendCode(verifyEdt);
+                    sendCode();
                 }
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                progressBar.setVisibility(View.GONE);
+                fname.setEnabled(true);
+                lname.setEnabled(true);
+                email.setEnabled(true);
+                pword.setEnabled(true);
+                phone.setEnabled(true);
+                confirm.setEnabled(true);
+                register.setEnabled(true);
+
+                Toast.makeText(Register.this, "Cancelled Phone Authentication", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void verifyPhoneNumber(final EditText verifyPhone, final Button send) {
+    private void verifyPhoneNumber() {
         progress.setVisibility(View.VISIBLE);
+        verifyEdt.setEnabled(false);
+        submit.setEnabled(false);
         PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
                 progress.setVisibility(View.GONE);
-                verifyPhone.setText("");
-                verifyPhone.setHint("Enter verification code here");
-                send.setText("Submit");
+                verifyEdt.setEnabled(true);
+                submit.setEnabled(true);
+                verifyEdt.setText("");
+                verifyEdt.setHint("Enter verification code here");
+                submit.setText("Submit");
 
                 Toast.makeText(Register.this, "Successfully sent code code. Please wait a few seconds and check your phone for your verificstion code", Toast.LENGTH_SHORT).show();
             }
@@ -248,6 +329,8 @@ public class Register extends AppCompatActivity {
             @Override
             public void onVerificationFailed(FirebaseException e) {
                 progress.setVisibility(View.GONE);
+                verifyEdt.setEnabled(true);
+                submit.setEnabled(true);
                 Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
@@ -279,7 +362,7 @@ public class Register extends AppCompatActivity {
         };
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                verifyPhone.getText().toString(),
+                verifyEdt.getText().toString(),
                 60,
                 TimeUnit.SECONDS,   // Unit of timeout
                 this,               // Activity (for callback binding)
@@ -291,9 +374,11 @@ public class Register extends AppCompatActivity {
     }
 
 
-    private void sendCode(final EditText verifyPhone) {
+    private void sendCode() {
         progress.setVisibility(View.VISIBLE);
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, verifyPhone.getText().toString());
+        verifyEdt.setEnabled(false);
+        submit.setEnabled(false);
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, verifyEdt.getText().toString());
         signInWithPhoneAuthCredential(credential);
     }
 
@@ -329,6 +414,7 @@ public class Register extends AppCompatActivity {
                     }
                 });
     }
+
 
 
 
