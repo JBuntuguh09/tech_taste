@@ -40,7 +40,7 @@ public class Dashboard extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("My Dashboard");
-
+        settings.setUserrole("");
         sectionsPageAdapter = new Sections_Page_Adapter(getSupportFragmentManager());
 
         viewPager.setAdapter(sectionsPageAdapter);

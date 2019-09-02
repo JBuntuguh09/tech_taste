@@ -24,4 +24,6 @@
     <string name="post_order">Post Order</string>
     <string name="verify">Verify</string>
     <string name="username">Username</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="reset">Reset</string>
 </resources>

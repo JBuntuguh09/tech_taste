@@ -207,8 +207,8 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
                 hashMap.put("Service", spinService.getSelectedItem().toString());
                 hashMap.put("Title", title.getText().toString());
                 hashMap.put("Comment", comment.getText().toString());
-                hashMap.put("Created_Date", ShortCut_To.getCurrentDateFormat2());
-                hashMap.put("Updated_Date", ShortCut_To.getCurrentDateFormat2());
+                hashMap.put("Created_Date", ShortCut_To.getCurrentDatewithTime());
+                hashMap.put("Updated_Date", ShortCut_To.getCurrentDatewithTime());
                 hashMap.put("UserId", auth.getCurrentUser().getUid());
                 hashMap.put("Username", settings.getFullName());
                 hashMap.put("Phone_Number", settings.getPhoneNum());
@@ -365,7 +365,7 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 //.setAspectRatio(1,1)
-                .setMinCropWindowSize(500,500)
+                //.setMinCropWindowSize(500,500)
                 .start(getContext(), this);
 
 

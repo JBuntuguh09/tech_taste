@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lonewolf.techtaste.Dialogues.Show_Me;
+import com.lonewolf.techtaste.Resources.Settings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,14 +30,17 @@ public class Admin_Dashboard extends AppCompatActivity {
     private ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
     private LinearLayout linearLayout;
     private ProgressBar progressBar;
+    private Settings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin__dashboard);
 
+        settings = new Settings(Admin_Dashboard.this);
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
         linearLayout = findViewById(R.id.linOrders);
         progressBar = findViewById(R.id.progressBar);
 
@@ -129,6 +133,7 @@ public class Admin_Dashboard extends AppCompatActivity {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    settings.setFeaturetype("Admin Issue Details");
                     List<String> list = new ArrayList<>();
                     list.add(0, hashMap.get("service"));
                     list.add(1, hashMap.get("title"));
@@ -139,8 +144,8 @@ public class Admin_Dashboard extends AppCompatActivity {
                     list.add(6, hashMap.get("comment_extra"));
                     list.add(7, hashMap.get("solution_extra"));
                     list.add(8, hashMap.get("serviceId"));
-                    list.add(8, hashMap.get("userId"));
-                    list.add(8, hashMap.get("username"));
+                    list.add(9, hashMap.get("userId"));
+                    list.add(10, hashMap.get("username"));
 
 
 

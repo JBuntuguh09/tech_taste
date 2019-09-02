@@ -21,9 +21,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lonewolf.techtaste.Dialogues.Show_Me;
 import com.lonewolf.techtaste.R;
+import com.lonewolf.techtaste.Resources.Settings;
 import com.lonewolf.techtaste.Resources.ShortCut_To;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,6 +40,7 @@ public class Frag_Orders extends Fragment {
     private FirebaseAuth auth;
     private ProgressBar progressBar;
     private ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
+    private Settings settings;
 
 
     public Frag_Orders() {
@@ -52,6 +56,7 @@ public class Frag_Orders extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        settings = new Settings(getActivity());
         linearLayout = view.findViewById(R.id.linOrders);
         progressBar = view.findViewById(R.id.progressBar);
 
@@ -82,6 +87,7 @@ public class Frag_Orders extends Fragment {
                             hashMap.put("date", father.child("Created_Date").getValue().toString());
                             hashMap.put("status", father.child("Status").getValue().toString());
                             hashMap.put("serviceId", father.getKey().toString());
+                            hashMap.put("userId", father.child("UserId").getValue().toString());
 
 
                             if(father.child("Comment_Extra").exists()){
@@ -108,6 +114,14 @@ public class Frag_Orders extends Fragment {
                         }
                     }
                     if(arrayList.size()>0 && getActivity()!=null){
+                        Collections.sort(arrayList, new Comparator<HashMap<String, String>>() {
+                            @Override
+                            public int compare(HashMap<String, String> lhs, HashMap<String, String> rhs) {
+
+                                return  rhs.get("date").compareTo(lhs.get("date"));
+                            }
+                        });
+
                         setOrders();
                     }else{
                         if(getActivity()!=null) {
@@ -121,7 +135,8 @@ public class Frag_Orders extends Fragment {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     progressBar.setVisibility(View.GONE);
                     if(getActivity()!=null) {
-                        Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        //Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -134,7 +149,7 @@ public class Frag_Orders extends Fragment {
 
     private void setOrders() {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-        for(int a=0; a<arrayList.size(); a++){
+        for(int a=0; a<arrayList.size(); a++) {
             final HashMap<String, String> hashMap = arrayList.get(a);
 
             View view = layoutInflater.inflate(R.layout.layout_show_services_list, linearLayout, false);
@@ -145,12 +160,32 @@ public class Frag_Orders extends Fragment {
 
             service.setText(hashMap.get("service"));
             title.setText(hashMap.get("title"));
-            date.setText(hashMap.get("date"));
+            if (hashMap.get("date").contains("T")) {
+                String[] splitDate = hashMap.get("date").split("T");
+                String newDate = splitDate[0];
+                String newTime = ShortCut_To.getTimeFromDate(hashMap.get("date"));
+                Log.d("llll", newTime);
+                String finalDate = newDate + " at " + newTime;
+                date.setText(finalDate);
+//                if(newTime.contains(".")){
+//                    String[] time = newTime.split(".");
+//                    String dd = time[0];
+//                    String finalDate = newDate + " at " + dd;
+//                    date.setText(finalDate);
+//                }else{
+//                    String finalDate = newDate + " at " + newTime;
+//                    date.setText(finalDate);
+//                }
+            } else {
+                date.setText(hashMap.get("date"));
+            }
+
             status.setText(hashMap.get("status"));
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    settings.setFeaturetype("User Issue Details");
                     List<String> list = new ArrayList<>();
                     list.add(0, hashMap.get("service"));
                     list.add(1, hashMap.get("title"));
@@ -161,6 +196,8 @@ public class Frag_Orders extends Fragment {
                     list.add(6, hashMap.get("comment_extra"));
                     list.add(7, hashMap.get("solution_extra"));
                     list.add(8, hashMap.get("serviceId"));
+                    list.add(9, hashMap.get("userId"));
+                    list.add(10, hashMap.get("username"));
 
 
 
