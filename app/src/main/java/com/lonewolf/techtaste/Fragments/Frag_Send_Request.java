@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -20,6 +21,7 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +75,7 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
     private Settings settings;
     private TextInputLayout textInputLayout;
     private ProgressBar progressBar;
+    private TextView welcom;
 
     private List<String> listLinks= new ArrayList<>();
     private List<String> listLinks2= new ArrayList<>();
@@ -104,6 +107,7 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
         progressBar = view.findViewById(R.id.progressBar);
         addPics = view.findViewById(R.id.btnAddPic);
         firstPicsText = view.findViewById(R.id.txtPicsLabel);
+        welcom = view.findViewById(R.id.txtWelcomeMessage);
 
         settings = new Settings(getContext());
 
@@ -130,7 +134,7 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
         addPics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listLinks.size()<4) {
+                if(listLinks.size()<3) {
                     uploadButtons();
                 }else{
                     Toast.makeText(getActivity(), "You cannot upload more than 3 pictures", Toast.LENGTH_SHORT).show();
@@ -203,8 +207,8 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
                 hashMap.put("Service", spinService.getSelectedItem().toString());
                 hashMap.put("Title", title.getText().toString());
                 hashMap.put("Comment", comment.getText().toString());
-                hashMap.put("Created_Date", ShortCut_To.getCurrentDateFormat2());
-                hashMap.put("Updated_Date", ShortCut_To.getCurrentDateFormat2());
+                hashMap.put("Created_Date", ShortCut_To.getCurrentDatewithTime());
+                hashMap.put("Updated_Date", ShortCut_To.getCurrentDatewithTime());
                 hashMap.put("UserId", auth.getCurrentUser().getUid());
                 hashMap.put("Username", settings.getFullName());
                 hashMap.put("Phone_Number", settings.getPhoneNum());
@@ -280,22 +284,37 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
         });
 
         for(int a= 0; a<listUri.size(); a++) {
+            final List<Uri> listCheck = new ArrayList<>();
             final View views = inflater.inflate(R.layout.layout_show_images, linear, false);
             ImageView image = views.findViewById(R.id.imgPic);
-            ImageView close = views.findViewById(R.id.imgClose);
+            ImageView remove = views.findViewById(R.id.imgClose);
 
 
             Picasso.with(getActivity()).load(listUri.get(a)).into(image);
             final int finalA = a;
-            close.setOnClickListener(new View.OnClickListener() {
+
+            remove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listUri.remove(finalA);
-                    listLinks.remove(finalA);
-                    linear.removeView(views);
+
+
+                    try {
+                        listUri.remove(finalA);
+                        listLinks.remove(finalA);
+                    }catch (Exception e){
+                        listUri.remove(finalA-1);
+                        listLinks.remove(finalA-1);
+                    }
+
                     firstPicsText.setText("You have selected "+(listUri.size())+" pictures. \nTap here to view");
+                    linear.removeView(views);
+//
+
                 }
             });
+
+
+
 
             linear.addView(views);
 
@@ -313,6 +332,13 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
                 settings.setPhoneNum(dataSnapshot.child("Phone").getValue().toString());
                 settings.setFullName(dataSnapshot.child("First_Name").getValue().toString()+" "+dataSnapshot.child("Last_Name").getValue().toString());
                 settings.setEmailAddress(dataSnapshot.child("Email").getValue().toString());
+
+                if(dataSnapshot.child("Role").exists()){
+                    settings.setUserrole(dataSnapshot.child("Role").getValue().toString());
+                }
+
+                String newWelcome = "Welcome "+settings.getFullName();
+                welcom.setText(newWelcome);
 
             }
 
@@ -339,7 +365,7 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 //.setAspectRatio(1,1)
-                .setMinCropWindowSize(500,500)
+                //.setMinCropWindowSize(500,500)
                 .start(getContext(), this);
 
 
@@ -395,4 +421,6 @@ public class Frag_Send_Request extends AppCompatDialogFragment {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
+
 }

@@ -4,6 +4,7 @@ package com.lonewolf.techtaste.Fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.lonewolf.techtaste.Dialogues.Show_Me;
 import com.lonewolf.techtaste.R;
+import com.lonewolf.techtaste.Resources.Settings;
 import com.lonewolf.techtaste.Resources.ShortCut_To;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +40,7 @@ public class Frag_Orders extends Fragment {
     private FirebaseAuth auth;
     private ProgressBar progressBar;
     private ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
+    private Settings settings;
 
 
     public Frag_Orders() {
@@ -49,67 +56,155 @@ public class Frag_Orders extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        settings = new Settings(getActivity());
         linearLayout = view.findViewById(R.id.linOrders);
         progressBar = view.findViewById(R.id.progressBar);
 
         getOrders();
+
+
         return view;
     }
 
     private void getOrders() {
         progressBar.setVisibility(View.VISIBLE);
-        databaseReference.child("Request").child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                arrayList.clear();
-                linearLayout.removeAllViews();
-                for(DataSnapshot grand : dataSnapshot.getChildren()){
-                    for(DataSnapshot father : grand.getChildren()){
+        try {
 
-                        HashMap<String, String> hashMap = new HashMap<>();
-                        hashMap.put("title", father.child("Title").getValue().toString());
-                        hashMap.put("comment", father.child("Comment").getValue().toString());
-                        hashMap.put("service", father.child("Service").getValue().toString());
-                        hashMap.put("date", father.child("Created_Date").getValue().toString());
-                        hashMap.put("status", father.child("Status").getValue().toString());
+            databaseReference.child("Request").child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    arrayList.clear();
+                    linearLayout.removeAllViews();
+                    for(DataSnapshot grand : dataSnapshot.getChildren()){
+                        for(DataSnapshot father : grand.getChildren()){
+
+                            HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("title", father.child("Title").getValue().toString());
+                            hashMap.put("comment", father.child("Comment").getValue().toString());
+                            hashMap.put("service", father.child("Service").getValue().toString());
+                            hashMap.put("date", father.child("Created_Date").getValue().toString());
+                            hashMap.put("status", father.child("Status").getValue().toString());
+                            hashMap.put("serviceId", father.getKey().toString());
+                            hashMap.put("userId", father.child("UserId").getValue().toString());
 
 
-                      arrayList.add(hashMap);
+                            if(father.child("Comment_Extra").exists()){
+                                hashMap.put("comment_extra", father.child("Comment_Extra").getValue().toString());
+                            }else{
+                                hashMap.put("comment_extra", "Empty");
+                            }
 
+                            if(father.child("Solution").exists()){
+                                hashMap.put("solution", father.child("Solution").getValue().toString());
+                            }else{
+                                hashMap.put("solution", "Empty");
+                            }
+
+                            if(father.child("Solution_Extra").exists()){
+                                hashMap.put("solution_extra", father.child("Solution_Extra").getValue().toString());
+                            }else{
+                                hashMap.put("solution_extra", "Empty");
+                            }
+
+
+                            arrayList.add(hashMap);
+
+                        }
+                    }
+                    if(arrayList.size()>0 && getActivity()!=null){
+                        Collections.sort(arrayList, new Comparator<HashMap<String, String>>() {
+                            @Override
+                            public int compare(HashMap<String, String> lhs, HashMap<String, String> rhs) {
+
+                                return  rhs.get("date").compareTo(lhs.get("date"));
+                            }
+                        });
+
+                        setOrders();
+                    }else{
+                        if(getActivity()!=null) {
+                            Toast.makeText(getActivity(), "No Records found", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
                     }
                 }
-                if(arrayList.size()>0){
-                    setOrders();
-                }else{
-                    Toast.makeText(getActivity(), "No Records found", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    progressBar.setVisibility(View.GONE);
+                    if(getActivity()!=null) {
+
+                        //Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void setOrders() {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-        for(int a=0; a<arrayList.size(); a++){
-            HashMap<String, String> hashMap = arrayList.get(a);
+        for(int a=0; a<arrayList.size(); a++) {
+            final HashMap<String, String> hashMap = arrayList.get(a);
 
             View view = layoutInflater.inflate(R.layout.layout_show_services_list, linearLayout, false);
             TextView service = view.findViewById(R.id.txtService);
-            TextView title = view.findViewById(R.id.txtTitle);
+            final TextView title = view.findViewById(R.id.txtTitle);
             TextView date = view.findViewById(R.id.txtDate);
             TextView status = view.findViewById(R.id.txtStatus);
 
             service.setText(hashMap.get("service"));
             title.setText(hashMap.get("title"));
-            date.setText(hashMap.get("date"));
+            if (hashMap.get("date").contains("T")) {
+                String[] splitDate = hashMap.get("date").split("T");
+                String newDate = splitDate[0];
+                String newTime = ShortCut_To.getTimeFromDate(hashMap.get("date"));
+                Log.d("llll", newTime);
+                String finalDate = newDate + " at " + newTime;
+                date.setText(finalDate);
+//                if(newTime.contains(".")){
+//                    String[] time = newTime.split(".");
+//                    String dd = time[0];
+//                    String finalDate = newDate + " at " + dd;
+//                    date.setText(finalDate);
+//                }else{
+//                    String finalDate = newDate + " at " + newTime;
+//                    date.setText(finalDate);
+//                }
+            } else {
+                date.setText(hashMap.get("date"));
+            }
+
             status.setText(hashMap.get("status"));
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    settings.setFeaturetype("User Issue Details");
+                    List<String> list = new ArrayList<>();
+                    list.add(0, hashMap.get("service"));
+                    list.add(1, hashMap.get("title"));
+                    list.add(2, hashMap.get("date"));
+                    list.add(3, hashMap.get("status"));
+                    list.add(4, hashMap.get("comment"));
+                    list.add(5, hashMap.get("solution"));
+                    list.add(6, hashMap.get("comment_extra"));
+                    list.add(7, hashMap.get("solution_extra"));
+                    list.add(8, hashMap.get("serviceId"));
+                    list.add(9, hashMap.get("userId"));
+                    list.add(10, hashMap.get("username"));
+
+
+
+                    Show_Me.issueDetails(getActivity(), linearLayout, list);
+
+                }
+            });
 
             linearLayout.addView(view);
 

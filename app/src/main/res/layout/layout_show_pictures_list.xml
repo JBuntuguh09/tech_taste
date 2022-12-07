@@ -40,13 +40,17 @@
 
     </android.support.v7.widget.Toolbar>
 
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <LinearLayout
         android:layout_margin="10dp"
         android:id="@+id/linImages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"></LinearLayout>
+</ScrollView>
+
     <TextView
         android:visibility="gone"
         android:id="@+id/tstCamera"

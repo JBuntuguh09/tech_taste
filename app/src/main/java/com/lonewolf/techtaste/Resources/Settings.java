@@ -12,6 +12,10 @@ public class Settings {
     private final static String FULL_NAME = "user full name";
     private final static String PHONE_NUM = "my phone num";
     private final static String EMAIL_ADDRESS = "my email add";
+    private final static String USERROLE = "user rolz";
+    private final static String FEATURETYPE = "feature type";
+    private final static String KEEPLOGGEDIN = "keep me logged in";
+
 
 
     public Settings(Context context) {
@@ -67,6 +71,36 @@ public class Settings {
     public void setEmailAddress(String emailAddress){
         Editor editor = getEditor();
         editor.putString(EMAIL_ADDRESS, emailAddress);
+        editor.commit();
+    }
+
+    public String getUserrole(){
+        return sharedPreferences.getString(USERROLE, "");
+    }
+
+    public void setUserrole(String userrole){
+        Editor editor = getEditor();
+        editor.putString(USERROLE,userrole );
+        editor.commit();
+    }
+
+    public String getFeaturetype(){
+        return sharedPreferences.getString(FEATURETYPE, "");
+    }
+
+    public void setFeaturetype(String featuretype){
+        Editor editor =getEditor();
+        editor.putString(FEATURETYPE, featuretype);
+        editor.commit();
+    }
+
+    public boolean getKeeploggedin(){
+        return sharedPreferences.getBoolean(KEEPLOGGEDIN, false);
+    }
+
+    public void setKeeploggedin(boolean keeploggedin){
+        Editor editor = getEditor();
+        editor.putBoolean(KEEPLOGGEDIN, keeploggedin);
         editor.commit();
     }
 }
